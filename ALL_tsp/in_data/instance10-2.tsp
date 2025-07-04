@@ -1,0 +1,16 @@
+NAME : instance10
+COMMENT : 10-city random TSP (Reinelt)
+TYPE : TSP
+DIMENSION : 10
+EDGE_WEIGHT_TYPE : EUC_2D
+NODE_COORD_SECTION
+  0  432  418
+  1  132  333
+  2  349  148
+  3  222  490
+  4  446   27
+  5  334   19
+  6  140  176
+  7  549  312
+  8  322  148
+  9  153   62

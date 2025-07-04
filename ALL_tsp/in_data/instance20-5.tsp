@@ -1,0 +1,26 @@
+NAME : instance20
+COMMENT : 20-city random TSP (Reinelt)
+TYPE : TSP
+DIMENSION : 20
+EDGE_WEIGHT_TYPE : EUC_2D
+NODE_COORD_SECTION
+  0   35    7
+  1  144  570
+  2  535  392
+  3  412  328
+  4  581  316
+  5  430  461
+  6  310  381
+  7  312  342
+  8  404   77
+  9  133  112
+ 10  477   60
+ 11  463  189
+ 12  495  303
+ 13   68   67
+ 14  124  321
+ 15  327  580
+ 16  302  158
+ 17  302  222
+ 18  302  236
+ 19  552  113
