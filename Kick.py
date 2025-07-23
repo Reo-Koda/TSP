@@ -92,7 +92,7 @@ def set_abcd_weighted(tour, length_cache, weight_sum):
     a1, a2, b1, b2, c1, c2, d1, d2 = sorted(samples)
     return a1, a2, b1, b2, c1, c2, d1, d2
     
-def double_bridge(tour, length_cache, weight_sum):
+def double_bridge(tour):
     # a1, a2, b1, b2, c1, c2, d1, d2 = set_random_abcd_1(tour) # 偏りが激しい
     a1, a2, b1, b2, c1, c2, d1, d2 = set_random_abcd_2(tour) # 試行回数が少なくなる
     # a1, a2, b1, b2, c1, c2, d1, d2 = set_abcd_weighted(tour, length_cache, weight_sum)

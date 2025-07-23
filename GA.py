@@ -26,22 +26,30 @@ class Individual:
     
     def improve(self, city_list, length_cache, neighbors_rank, rank):
         self.genes = Opt.fast_two_or_1m(city_list, self.genes, length_cache, neighbors_rank, rank)
-        self.genes = Opt.fast_three_or_1m(city_list, self.genes, length_cache, neighbors_rank, int(rank/2))
+        if random.random() < 0.1:
+            self.genes = Opt.fast_three_or_1m(city_list, self.genes, length_cache, neighbors_rank, int(rank/2))
     
-    def mutate(self, stop_cnt):
-        # self.genes = Kick.kick(self.genes, stop_cnt)
-        if stop_cnt < 4:
-            self.genes = Kick.random_reverse(self.genes)
-            self.genes = Kick.translocation(self.genes)
-        else:
-            self.genes = Kick.random_swap_section(self.genes)
-            # self.genes = Kick.scramble(self.genes)
+    def mutate(self, city_list, length_cache, stop_cnt):
+        # 最初のバージョン
+        # # self.genes = Kick.kick(self.genes, stop_cnt)
+        # if stop_cnt < 4:
+        #     self.genes = Kick.random_reverse(self.genes)
+        #     self.genes = Kick.translocation(self.genes)
+        # else:
+        #     self.genes = Kick.random_swap_section(self.genes)
+        #     # self.genes = Kick.scramble(self.genes)
 
-            r = random.random()
-            if r < 0.1:
-                print(" double_bridge ", end="", flush=True)
-                self.genes = Kick.double_bridge(self.genes)
-                self.genes = Kick.double_bridge(self.genes)
+        #     r = random.random()
+        #     if r < 0.1:
+        #         print(" double_bridge ", end="", flush=True)
+        #         self.genes = Kick.double_bridge(self.genes)
+        #         self.genes = Kick.double_bridge(self.genes)
+        
+        # 別のバージョン
+        if stop_cnt < 4:
+            self.genes = Kick.double_bridge(self.genes)
+        else:
+            self.genes = Kick.LNS_Kick(city_list, self.genes, length_cache, destroy_num=int(len(self.genes)*0.3))
 
 def init_population(pop_size, city_list, length_cache, neighbors_rank):
     return [Individual(city_list, length_cache, neighbors_rank) for _ in range(pop_size)]
@@ -79,7 +87,7 @@ def next_generation(population, city_list, length_cache, neighbors_rank, rank, g
         child = order_crossover(parent1, parent2, city_list, length_cache, neighbors_rank)
         if random.random() < mutation_rate: # 確率で突然変異
             print(f"変異開始 {len(next_pop):>3} / {len(population):>3}", end=" -", flush=True)
-            child.mutate(stop_cnt)
+            child.mutate(city_list, length_cache, stop_cnt)
             child.improve(city_list, length_cache, neighbors_rank, rank)
             print(">  変異終了")
         elif gen % 10 == 0 or random.random() < 0.2: # 通常一つの遺伝子につき30%の確率で局所探索を行う 全体の遺伝子に局所探索を行うのは10回に1回
@@ -145,10 +153,3 @@ def GA(city_list, length_cache, neighbors_rank, rank, pop_size=50, generations=2
         plt.ioff()
     return best.genes
 
-if __name__ == "__main__":
-    # 使用例:
-    # city_list, length_cache = ReadFile.read_file(...) として準備
-    # tour, dist = ga_tsp(city_list, length_cache)
-    # print("最良経路:", tour)
-    # print(f"距離: {dist:.2f}")
-    pass

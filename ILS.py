@@ -26,7 +26,7 @@ def ILS(city_list, tour, length_cache, neighbors_rank, rank, minuites=3, interva
             temp_tour = Kick.LNS_Kick(city_list, temp_tour, length_cache, destroy_num=int(len(temp_tour)*0.3)) # 局所探索外へのキックに有用
             # temp_tour = Kick.scramble(temp_tour)
         else:
-            temp_tour = Kick.double_bridge(temp_tour, length_cache, weight_sum)
+            temp_tour = Kick.double_bridge(temp_tour)
             # temp_tour = Kick.random_swap_section(temp_tour)
             # temp_tour = Kick.translocation(temp_tour)
 
