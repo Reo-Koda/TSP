@@ -59,7 +59,7 @@ def main():
     # 構築法
     # tour = Gready.nn(city_list, neighbors_rank)
     # tour = Gready.time_rand_nn(city_list, length_cache, neighbors_rank, minuites=1)
-    # tour = Gready.k_rand_nn(city_list, length_cache, neighbors_rank, rank, k=100, noise_rate=0.01)
+    # tour = Gready.k_rand_nn(city_list, length_cache, neighbors_rank, k=100, noise_rate=0.01)
     # tour = print_result_only(city_list, tour, length_cache, "k_rand_nn")
     # tour = Gready.time_many_rand_nn(city_list, length_cache, neighbors_rank)
     # tour = Gready.ci(city_list, length_cache, neighbors_rank)
@@ -68,20 +68,20 @@ def main():
     # tour = print_result_only(city_list, tour, length_cache, "rand_ci")
     # tour = Gready.many_ci(city_list, tour, length_cache)
     # tour = print_result_only(city_list, tour, length_cache, "many_ci")
-    tour = GA.GA(
-        city_list,
-        length_cache,
-        neighbors_rank,
-        rank,
-        pop_size=50,
-        generations=100,
-        minuites=60*3,
-        elite_size=4,
-        tournament_size=6,
-        mutation_rate=0.05,
-        animate=True,
-        pause_time=0.01
-    )
+    # tour = GA.GA(
+    #     city_list,
+    #     length_cache,
+    #     neighbors_rank,
+    #     rank,
+    #     pop_size=50,
+    #     generations=100,
+    #     minuites=60,
+    #     elite_size=4,
+    #     tournament_size=6,
+    #     mutation_rate=0.05,
+    #     animate=True,
+    #     pause_time=0.01
+    # )
     # tour = ACO.ACO(
     #     city_list,
     #     length_cache,
@@ -99,16 +99,32 @@ def main():
     #     length_cache,
     #     neighbors_rank,
     #     rank,
-    #     times=300,
-    #     minuites=10,
-    #     ants_num=100,
-    #     alpha=1.0,
-    #     beta=5.0,
-    #     rho=0.3,
+    #     times=100000,
+    #     minuites=5,
+    #     ants_num=city_list_length//2,
+    #     alpha=1.0, # 1.0
+    #     beta=5.0,  # 5.0
+    #     rho=0.3,   # 0.3
     #     Q=100.0
     # )
+    # tour = print_result_only(city_list, tour, length_cache, "multi_ACO")
+    tour = ACO.ACS(
+        city_list,
+        length_cache,
+        neighbors_rank,
+        rank,
+        times=1000,
+        minuites=5,
+        ants_num=city_list_length//2,
+        alpha=1.0,
+        beta=10.0,
+        rho_global=0.9,
+        rho_local=0.9,
+        Q=100.0,
+        isPrint=True
+    )
 
-    print("構築後    ", end=' ')
+    print("構築後", end='     ')
     base_length = Result.result(city_list, tour, length_cache, False)
 
     # 改善法
