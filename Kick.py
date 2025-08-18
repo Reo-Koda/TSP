@@ -111,32 +111,34 @@ def double_bridge(tour):
     return temp_tour
 
 # LNS(大規模近傍探索)特有のキック操作
-def destroy(tour, destroy_num):
-    n = len(tour)
+def destroy(city_list_length, tour, destroy_num):
+    n = city_list_length
     removed_indices = set(random.sample(range(n), destroy_num))
     partial = [tour[i] for i in range(n) if i not in removed_indices]
     removed = [tour[i] for i in removed_indices]
     return partial, removed
 
 # 貪欲最小挿入修復
-def greedy_repair(city_list, tour, length_cache, removed):
-    while len(city_list) != len(tour):
+def greedy_repair(city_list_length, tour, length_cache, removed):
+    tour_size = len(tour)
+    while city_list_length != tour_size:
         # 挿入都市と挿入辺の決定
         min_lemgth = INF
-        for i in range(len(tour)):
+        for i in range(tour_size):
             a = tour[i]
-            b = tour[(i + 1) % len(tour)]
+            b = tour[(i + 1) % tour_size]
             for j in removed:
-                aj_lemgth = CalcLength.calc_straight_length(city_list, a, j, length_cache)
-                jb_lemgth = CalcLength.calc_straight_length(city_list, j, b, length_cache)
-                ab_length = CalcLength.calc_straight_length(city_list, a, b, length_cache)
+                aj_lemgth = length_cache[a][j]
+                jb_lemgth = length_cache[j][b]
+                ab_length = length_cache[a][b]
                 calc_length = aj_lemgth + jb_lemgth - ab_length
                 if min_lemgth > calc_length:
                     min_lemgth = calc_length
-                    g, h = (i + 1) % len(tour), j
+                    g, h = (i + 1) % tour_size, j
         
         tour.insert(g, h)
         removed.remove(h)
+        tour_size += 1
     
     return tour
 
@@ -168,9 +170,9 @@ def regret_repair(city_list, tour, length_cache, removed, k=2):
     
     return tour
 
-def LNS_Kick(city_list, tour, length_cache, destroy_num):
-    partial, removed = destroy(tour, destroy_num)
-    tour = greedy_repair(city_list, partial, length_cache, removed)
+def LNS_Kick(city_list_length, tour, length_cache, destroy_num):
+    partial, removed = destroy(city_list_length, tour, destroy_num)
+    tour = greedy_repair(city_list_length, partial, length_cache, removed)
     return tour
 
 def kick(tour, kicknum):

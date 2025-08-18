@@ -11,10 +11,10 @@ def calc_straight_length(city_list, pre, next, length_cache):
         length_cache[pre][next] = length_cache[next][pre] = math.hypot(dx, dy)
     return length_cache[pre][next]
 
-def calc_tour_length(city_list, tour, length_cache):
+def calc_tour_length(tour, length_cache):
     total = 0
     for i in range(len(tour)):
         cur = tour[i]
         nxt = tour[(i + 1) % len(tour)]
-        total += calc_straight_length(city_list, cur, nxt, length_cache)
+        total += length_cache[cur][nxt]
     return total

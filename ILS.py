@@ -6,10 +6,10 @@ import Kick
 INF = 1e1000
 
 # 経路が入ったtour配列を引数として渡す
-def ILS(city_list, tour, length_cache, neighbors_rank, rank, minuites=3, interval=50):
+def ILS(city_list_length, tour, length_cache, neighbors_rank, rank, minuites=3, interval=50):
     try_cnt = 0 # デバッグ用
     fail_cnt = 0
-    min_length = CalcLength.calc_tour_length(city_list, tour, length_cache)
+    min_length = CalcLength.calc_tour_length(tour, length_cache)
     weight_sum = Kick.save_weight_sum(length_cache) # 重み付きダブルブリッジ操作のために作成
     temp_tour = []
     store = tour.copy()
@@ -23,7 +23,7 @@ def ILS(city_list, tour, length_cache, neighbors_rank, rank, minuites=3, interva
         
         # キック操作
         if fail_cnt == interval:
-            temp_tour = Kick.LNS_Kick(city_list, temp_tour, length_cache, destroy_num=int(len(temp_tour)*0.3)) # 局所探索外へのキックに有用
+            temp_tour = Kick.LNS_Kick(city_list_length, temp_tour, length_cache, destroy_num=int(city_list_length*0.3)) # 局所探索外へのキックに有用
             # temp_tour = Kick.scramble(temp_tour)
         else:
             temp_tour = Kick.double_bridge(temp_tour)
@@ -31,12 +31,12 @@ def ILS(city_list, tour, length_cache, neighbors_rank, rank, minuites=3, interva
             # temp_tour = Kick.translocation(temp_tour)
 
         # 局所最適解の探索
-        temp_tour = Opt.fast_two_or_1m(city_list, temp_tour, length_cache, neighbors_rank, rank)
+        temp_tour = Opt.fast_two_or_1m(city_list_length, temp_tour, length_cache, neighbors_rank, rank)
         if fail_cnt > int(interval / 2):
-            temp_tour = Opt.fast_three_or_1m(city_list, temp_tour, length_cache, neighbors_rank, int(rank/2))
+            temp_tour = Opt.fast_three_or_1m(city_list_length, temp_tour, length_cache, neighbors_rank, int(rank/2))
 
         # 改善が長く見られなかったら、改悪を許容する
-        calc_length = CalcLength.calc_tour_length(city_list, temp_tour, length_cache)
+        calc_length = CalcLength.calc_tour_length(temp_tour, length_cache)
         if min_length > calc_length:
             min_length = calc_length
             tour = temp_tour.copy()
